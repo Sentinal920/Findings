@@ -13,7 +13,7 @@ A) SQL Injection (Authentication Bypass)
 To Login as Engineer
 
 1) Navigate to http://localhost/login.php
-2) Enter the payload into the username field as "'or'1'='1" without double-quotes and type "'or'1'='1" into the password field.
+2) Enter the payload into the username field as "'or'1'='1" without double-quotes and type "'or'1'='1" into the password field without double-quotes.
 3) Click on "Login" button and you are logged in as an engineer.
 
 Request:
